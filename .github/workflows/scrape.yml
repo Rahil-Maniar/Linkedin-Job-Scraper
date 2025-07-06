@@ -1,0 +1,55 @@
+# Name of your automation workflow
+name: LinkedIn Scraper
+
+# This tells GitHub WHEN to run the script
+on:
+  schedule:
+    # This runs the script every 12 hours. The "0" means at the top of the hour.
+    # The "*/12" means every 12th hour.
+    - cron: '0 */12 * * *'
+  # This also allows you to run it manually from the Actions tab
+  workflow_dispatch:
+
+# This section defines WHAT to do
+jobs:
+  scrape-jobs:
+    # Use a standard Ubuntu Linux virtual machine for the job
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checks out your repository's code so the script is available
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      # Step 2: Sets up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # Step 3: Install your Python libraries
+      - name: Install dependencies
+        run: |
+          pip install playwright
+
+      # Step 4: Install the browsers for Playwright
+      - name: Install Playwright browsers
+        run: |
+          playwright install
+
+      # Step 5: Run your Python script!
+      - name: Run the scraper
+        env:
+          # This passes your secrets into the script
+          LINKEDIN_USER: ${{ secrets.LINKEDIN_USER }}
+          LINKEDIN_PASS: ${{ secrets.LINKEDIN_PASS }}
+        run: |
+          python your_main_script_name.py  # <-- Make sure this is the name of your python file
+
+      # Step 6: Commit the results back to the repository
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name "actions-bot"
+          git config --global user.email "actions-bot@users.noreply.github.com"
+          git add -A
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update job results" && git push)
