@@ -13,8 +13,10 @@ on:
 # This section defines WHAT to do
 jobs:
   scrape-jobs:
-    # Use a standard Ubuntu Linux virtual machine for the job
     runs-on: ubuntu-latest
+    # --- ADD THIS PERMISSIONS BLOCK ---
+    permissions:
+      contents: write
 
     steps:
       # Step 1: Checks out your repository's code so the script is available
