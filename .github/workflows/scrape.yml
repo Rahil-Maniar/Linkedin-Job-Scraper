@@ -44,7 +44,7 @@ jobs:
           LINKEDIN_USER: ${{ secrets.LINKEDIN_USER }}
           LINKEDIN_PASS: ${{ secrets.LINKEDIN_PASS }}
         run: |
-          python your_main_script_name.py  # <-- Make sure this is the name of your python file
+          python scraper.py  # <-- Make sure this is the name of your python file
 
       # Step 6: Commit the results back to the repository
       - name: Commit and push if changed
